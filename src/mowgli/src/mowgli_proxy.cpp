@@ -23,10 +23,8 @@
 #include <mowgli/MowgliProxyConfig.h>
 #include <mowgli/status.h>
 #include <mowgli/Led.h>
-#include <mowgli/wheelticks.h>
 
 #include <dynamic_reconfigure/server.h>
-#include <xbot_msgs/WheelTick.h>
 #include <mower_msgs/HighLevelStatus.h>
 
 #define WHEEL_DISTANCE_M 0.325
@@ -89,7 +87,11 @@ void MowgliStatusCB(const mowgli::status::ConstPtr &msg)
      om_mower_status.emergency = msg->emergency_stopbutton_triggered | msg->emergency_tilt_mech_triggered | msg->emergency_tilt_accel_triggered |
                                  msg->emergency_right_wheel_lifted | msg->emergency_left_wheel_lifted | msg->emergency_left_stop | msg->emergency_right_stop;
      /* not used anymore*/
-     om_mower_status.v_charge = msg->v_charge;
+     if (msg->is_charging) {
+         om_mower_status.v_charge = 32.0;
+     } else {
+         om_mower_status.v_charge = 0.0;
+     }
      om_mower_status.charge_current = msg->i_charge;
      om_mower_status.v_battery = msg->v_battery;
      om_mower_status.left_esc_status.current = msg->left_power;
@@ -106,22 +108,6 @@ void MowgliStatusCB(const mowgli::status::ConstPtr &msg)
 //    dr_right_encoder_ticks = msg->right_encoder_ticks;
 
     pubOMStatus.publish(om_mower_status);
-}
-
- void MowgliWheelTicksCB(const mowgli::wheelticks::ConstPtr &msg) {
-    xbot_msgs::WheelTick wheel_tick;
-    wheel_tick.stamp = msg->stamp;
-     wheel_tick.wheel_tick_factor = msg->wheel_tick_factor;
-     wheel_tick.valid_wheels = msg->valid_wheels;
-     wheel_tick.wheel_direction_fl = msg->wheel_direction_fl;
-     wheel_tick.wheel_ticks_fl = msg->wheel_ticks_fl;
-     wheel_tick.wheel_direction_fr = msg->wheel_direction_fr;
-     wheel_tick.wheel_ticks_fr = msg->wheel_ticks_fr;
-     wheel_tick.wheel_direction_rl = msg->wheel_direction_rl;
-     wheel_tick.wheel_ticks_rl = msg->wheel_ticks_rl;
-     wheel_tick.wheel_direction_rr = msg->wheel_direction_rr;
-     wheel_tick.wheel_ticks_rr= msg->wheel_ticks_rr;
-    wheel_tick_pub.publish(wheel_tick);
 }
 
  void reconfigureCB(mowgli::MowgliProxyConfig &c, uint32_t level)
@@ -164,12 +150,10 @@ void MowgliStatusCB(const mowgli::status::ConstPtr &msg)
 
     // Mowgli Topics
     subMowgliStatus = n.subscribe("mowgli/status", 50, MowgliStatusCB);    
-    subMowgliStatus = n.subscribe("mowgli/wheelticks", 50, MowgliWheelTicksCB);
     // subMowgliOdom = n.subscribe("mowgli/odom", 50, MowgliOdomCB);
 
     // OpenMower Status
     pubOMStatus = n.advertise<mower_msgs::Status>("mower/status", 50);
-    wheel_tick_pub = n.advertise<xbot_msgs::WheelTick>("mower/wheel_ticks", 1);
 
     // Services required by OpenMower
     ros::ServiceServer om_emergency_service = n.advertiseService("mower_service/emergency", setEmergencyStop);
