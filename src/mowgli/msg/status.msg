@@ -2,6 +2,9 @@ time stamp
 
 # sensor flags
 bool rain_detected
+uint8 emergency_status
+bool emergency_left_stop
+bool emergency_right_stop
 bool emergency_left_wheel_lifted
 bool emergency_right_wheel_lifted
 bool emergency_tilt_accel_triggered
@@ -26,6 +29,9 @@ uint32 right_encoder_ticks
 # motor power (drive motors)
 uint8 left_power
 uint8 right_power
+uint16 blade_power
+uint16 blade_RPM
+float32 blade_temperature
 
 # onboard imu temp
 float32 imu_temp

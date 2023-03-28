@@ -19,6 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
 	tf2_geometry_msgs
 	tf2_ros	
 	mower_msgs
+	xbot_msgs
 )
 
 # Geographiclib installs FindGeographicLib.cmake to this non-standard location
@@ -59,6 +60,7 @@ add_message_files(
   FILES
   magnetometer.msg		# custom message for IMU Magnetometer calibration via (ros-calibration_imu) 
   status.msg			# mowgli status message
+  wheelticks.msg
 )
 
 ## Generate services in the 'srv' folder
