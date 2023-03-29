@@ -1,5 +1,5 @@
 [submodule "src/Mowgli-open_mower_ros"]
 	path = src/Mowgli-open_mower_ros
-	url = https://github.com/ClemensElflein/open_mower_ros
+	url = https://github.com/cedbossneo/open_mower_ros
         branch = main
 
