@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
 	dynamic_reconfigure
 	roscpp
 	rospy
+  message_generation
+  geometry_msgs
 	std_msgs
 	mower_msgs
 )
