@@ -9,7 +9,6 @@
   <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>mower_msgs</build_depend>
-  <build_depend>xbot_msgs</build_depend>
   <export>
   </export>
 </package>

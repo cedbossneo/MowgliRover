@@ -11,15 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
 	dynamic_reconfigure
 	roscpp
 	rospy
-	nav_msgs
 	std_msgs
-	geometry_msgs
-	message_generation
-  	tf2
-	tf2_geometry_msgs
-	tf2_ros	
 	mower_msgs
-	xbot_msgs
 )
 
 # Geographiclib installs FindGeographicLib.cmake to this non-standard location
