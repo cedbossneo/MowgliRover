@@ -93,8 +93,7 @@ void MowgliStatusCB(const mowgli::status::ConstPtr &msg)
 #endif
 
      om_mower_status.rain_detected = msg->rain_detected;
-     om_mower_status.emergency = msg->emergency_stopbutton_triggered | msg->emergency_tilt_mech_triggered | msg->emergency_tilt_accel_triggered |
-                                 msg->emergency_right_wheel_lifted | msg->emergency_left_wheel_lifted;
+     om_mower_status.emergency = msg->emergency_status;
      /* not used anymore*/
      if (msg->is_charging) {
          om_mower_status.v_charge = 32.0;
