@@ -62,7 +62,7 @@ ros::Subscriber subMowgliStatus;
  int speed_r;
 
  bool setEmergencyStop(mower_msgs::EmergencyStopSrvRequest &req, mower_msgs::EmergencyStopSrvResponse &res) {
-    if (req->emergency) {
+    if (req.emergency) {
         ROS_ERROR_STREAM("mowgli_proxy: setEmergencyStop");
         if (!mowEmergencyDisableFlag)
         {
