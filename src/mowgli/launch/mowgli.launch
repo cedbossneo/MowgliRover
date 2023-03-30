@@ -4,6 +4,7 @@
     <!-- Mowgli Blade Manager -->
     <node pkg="mowgli" type="mowgli_blade" name="mowgli_to_om_blade_manager" required="true" output="screen" />
 
+    <include file="$(find open_mower)/launch/include/_gps.launch"/>
     <include file="$(find open_mower)/launch/include/_move_base.launch"/>
     <include file="$(find open_mower)/launch/include/_localization.launch"/>
     <include file="$(find open_mower)/launch/include/_teleop.launch"/>
