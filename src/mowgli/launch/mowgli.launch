@@ -1,38 +1,17 @@
 <launch>
-    <!-- Mowgli/OM to HomeAssistant Proxy -->
-    <node pkg="mowgli" type="om_ha_bridge.py" name="om_ha_bridge" output="screen" respawn="true"/>
-    <node pkg="mowgli" type="ha_om_bridge.py" name="ha_om_bridge" output="screen" respawn="true"/>
-
     <!-- Mowgli to OM Proxy -->
     <node pkg="mowgli" type="mowgli_proxy" name="mowgli_to_om_proxy" required="true" output="screen"/>
     <!-- Mowgli Blade Manager -->
     <node pkg="mowgli" type="mowgli_blade" name="mowgli_to_om_blade_manager" required="true" output="screen" />
 
-    <include file="$(find open_mower)/launch/include/_gps.launch"/>
+    <include file="$(find open_mower)/launch/include/_move_base.launch"/>
     <include file="$(find open_mower)/launch/include/_localization.launch"/>
     <include file="$(find open_mower)/launch/include/_teleop.launch"/>
     <include file="$(find open_mower)/launch/include/_record.launch">
         <arg name="prefix" value="mow_area"/>
     </include>
 
- <!-- OM specific settings below this comment-->
-  <node name="move_base_flex" pkg="mbf_costmap_nav" type="mbf_costmap_nav" required="true" output="screen">
-    <remap from="cmd_vel" to="/nav_vel"/>
-    <rosparam file="$(find open_mower)/params/costmap_common_params.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find open_mower)/params/costmap_common_params.yaml" command="load" ns="local_costmap" />
-    <rosparam file="$(find open_mower)/params/local_costmap_params.yaml" command="load" />
-    <rosparam file="$(find open_mower)/params/global_costmap_params.yaml" command="load" />
-    <rosparam file="$(find open_mower)/params/move_base_flex.yaml" command="load"/>
-    <rosparam file="$(find open_mower)/params/ftc_local_planner.yaml" command="load" />
-    <rosparam file="$(find open_mower)/params/docking_ftc_local_planner.yaml" command="load" />
-    <rosparam file="$(find open_mower)/params/global_planner_params.yaml" command="load" />
-  </node>
-
-  <node name="move_base_legacy_relay" pkg="mbf_costmap_nav" type="move_base_legacy_relay.py">
-    <param name="base_local_planner" value="FTCPlanner" />
-    <param name="base_global_planner" value="GlobalPlanner" />
-  </node>
-   <node pkg="mower_map" type="mower_map_service" name="map_service" output="screen"/>
+    <node pkg="mower_map" type="mower_map_service" name="map_service" output="screen"/>
     <node pkg="mower_logic" type="mower_logic" name="mower_logic" output="screen">
         <param name="automatic_start" value="$(env OM_AUTOMATIC_START)"/>
         <param name="docking_distance" value="$(env OM_DOCKING_DISTANCE)"/>
@@ -43,8 +22,6 @@
         <param name="outline_count" value="$(env OM_OUTLINE_COUNT)"/>
         <param name="outline_offset" value="$(env OM_OUTLINE_OFFSET)"/>
         <param name="battery_full_voltage" value="$(env OM_BATTERY_FULL_VOLTAGE)"/>
-        <remap from="/odom" to="/mower/odom"/> 
-	<remap to="/odom" from="/mower/odom"/>
     </node>
     <node pkg="slic3r_coverage_planner" type="slic3r_coverage_planner" name="slic3r_coverage_planner" output="screen"/>
 
