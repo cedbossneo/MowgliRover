@@ -47,6 +47,7 @@ ros::Publisher pubOMStatus;
 
 // Service Clients
 ros::ServiceClient mowClient;
+ros::ServiceClient emergencyClient;
 bool mowEmergencyDisableFlag = false;
 
 //Subs
@@ -61,14 +62,22 @@ ros::Subscriber subMowgliStatus;
  int speed_r;
 
  bool setEmergencyStop(mower_msgs::EmergencyStopSrvRequest &req, mower_msgs::EmergencyStopSrvResponse &res) {
-    ROS_ERROR_STREAM("mowgli_proxy: setEmergencyStop");
-    if (!mowEmergencyDisableFlag)
-    {
-        mowEmergencyDisableFlag = true;
-        std_srvs::SetBool mow_srv;
-        mow_srv.request.data = false;
-        mowClient.call(mow_srv);
-        ROS_WARN_STREAM("mowgli_proxy: EMERGENCY Blade ENABLED -> DISABLED");
+    if (req->emergency) {
+        ROS_ERROR_STREAM("mowgli_proxy: setEmergencyStop");
+        if (!mowEmergencyDisableFlag)
+        {
+            mowEmergencyDisableFlag = true;
+            std_srvs::SetBool mow_srv;
+            mow_srv.request.data = false;
+            mowClient.call(mow_srv);
+            ROS_WARN_STREAM("mowgli_proxy: EMERGENCY Blade ENABLED -> DISABLED");
+        }
+    } else {
+            mowEmergencyDisableFlag = false;
+            std_srvs::SetBool emergency_srv;
+            mow_srv.request.data = true;
+            emergencyClient.call(emergency_srv);
+            ROS_INFO_STREAM("mowgli_proxy: EMERGENCY RESET");
     }
     return true;
 }
@@ -180,6 +189,9 @@ void MowgliStatusCB(const mowgli::status::ConstPtr &msg)
 
     // Mowgli Services
     mowClient = n.serviceClient<std_srvs::SetBool>("mowgli/EnableMowerMotor");
+
+    // Mowgli Services
+    emergencyClient = n.serviceClient<std_srvs::SetBool>("mowgli/ResetEmergency");
 
     ROS_INFO("mowgli_blade: Waiting for mowgli/EnableMowerMotor server");
     if (!mowClient.waitForExistence(ros::Duration(60.0, 0.0))) {
