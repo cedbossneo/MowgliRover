@@ -75,7 +75,7 @@ ros::Subscriber subMowgliStatus;
     } else {
             mowEmergencyDisableFlag = false;
             std_srvs::SetBool emergency_srv;
-            mow_srv.request.data = true;
+            emergency_srv.request.data = true;
             emergencyClient.call(emergency_srv);
             ROS_INFO_STREAM("mowgli_proxy: EMERGENCY RESET");
     }
